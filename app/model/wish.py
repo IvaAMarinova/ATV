@@ -1,4 +1,4 @@
-from Wishes.app import db
+from app.extensions import db
 import datetime
 
 class Wish(db.Model):
