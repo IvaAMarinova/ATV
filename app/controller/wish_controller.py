@@ -28,3 +28,12 @@ def like_wish_logic(wish_id):
         db.session.commit()
         return wish
     return None
+
+def remove_all_wishes_logic():
+    try:
+        num_deleted = Wish.query.delete()
+        db.session.commit()
+        return num_deleted
+    except Exception as e:
+        db.session.rollback()
+        return str(e)

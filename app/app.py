@@ -9,24 +9,53 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Register the Blueprint
 app.register_blueprint(views)
 
 if __name__ == '__main__':
     with app.app_context():
-        # Create a test client to simulate requests
         test_client = app.test_client()
 
-        # Test adding a new wish
-        test_content = 'Sample Wish Content'
+        # Test adding a wish
+        test_content = 'New wish'
         response = test_client.post('/add_wish', json={'content': test_content})
+        print(f"Add Wish Response: {response.get_json()}")
         
         if response.status_code == 201:
-            print("Wish added successfully.")
             added_wish = Wish.query.filter_by(content=test_content).first()
-            if added_wish:
-                print(f"Wish ID: {added_wish.id}, Content: '{added_wish.content}'")
-        else:
-            print("Failed to add wish.")
+            print(f"Wish ID: {added_wish.id}, Content: '{added_wish.content}'")
+
+            # Test liking the added wish
+            response = test_client.post(f'/wishes/{added_wish.id}/like')
+            print(f"Like Wish Response: {response.get_json()}")
+
+            # Test getting the specific wish
+            response = test_client.get(f'/wishes/{added_wish.id}')
+            print(f"Get Specific Wish Response: {response.get_json()}")
+
+            # Test removing the wish
+            response = test_client.delete(f'/wishes/{added_wish.id}')
+            print(f"Remove Wish Response: {response.get_json()}")
+
+        # Test getting all wishes
+        response = test_client.get('/wishes')
+        wishes_data = response.get_json()
+
+        print("Get All Wishes Response:")
+        for wish in wishes_data:
+            print(f"Wish ID: {wish['id']}, Content: '{wish['content']}', Timestamp: {wish['timestamp']}, Likes: {wish['likes']}")
+
+        response = test_client.delete('/wishes')
+        print(f"Remove All Wishes Response: {response.get_json()}")
+
+        test_content = 'New wish'
+        response = test_client.post('/add_wish', json={'content': test_content})
+        print(f"Add Wish Response: {response.get_json()}")
+
+        response = test_client.get('/wishes')
+        wishes_data = response.get_json()
+
+        print("Get All Wishes Response:")
+        for wish in wishes_data:
+            print(f"Wish ID: {wish['id']}, Content: '{wish['content']}', Timestamp: {wish['timestamp']}, Likes: {wish['likes']}")
 
     app.run(debug=True)

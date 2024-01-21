@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.controller.wish_controller import (add_wish_logic, remove_wish_logic, get_wish_logic, get_all_wishes_logic, like_wish_logic)
+from app.controller.wish_controller import (add_wish_logic, remove_wish_logic, get_wish_logic, get_all_wishes_logic, like_wish_logic, remove_all_wishes_logic)
 
 views = Blueprint('views', __name__)
 
@@ -41,3 +41,11 @@ def like_wish(wish_id):
         return jsonify({'message': 'Wish liked successfully', 'likes': wish.likes}), 200
     else:
         return jsonify({'message': 'Wish not found'}), 404
+
+@views.route('/wishes', methods=['DELETE'])
+def remove_all_wishes():
+    result = remove_all_wishes_logic()
+    if isinstance(result, int):
+        return jsonify({'message': f'{result} wishes removed successfully'}), 200
+    else:
+        return jsonify({'error': result}), 500
