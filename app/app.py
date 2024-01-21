@@ -2,16 +2,16 @@ from flask import Flask
 from app.extensions import db
 from app.model.wish import Wish
 from app.view.wish_view import views
+from flasgger import Swagger
 
 app = Flask(__name__)
+Swagger(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:iva123@localhost:3307/wishes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize SQLAlchemy with Flask App
 db.init_app(app)
 
 with app.app_context():
-    # Create tables
     db.create_all()
 
 app.register_blueprint(views)
