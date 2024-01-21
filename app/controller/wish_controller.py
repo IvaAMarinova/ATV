@@ -12,3 +12,13 @@ def add_wish():
     db.session.add(new_wish)
     db.session.commit()
     return jsonify({'message': 'Wish added successfully', 'id': new_wish.id}), 201
+
+def remove_wish(wish_id):
+    wish = Wish.query.get(wish_id)
+    if wish:
+        db.session.delete(wish)
+        db.session.commit()
+        return jsonify({'message': 'Wish removed successfully'}), 200
+    else:
+        return jsonify({'message': 'Wish not found'}), 404
+
