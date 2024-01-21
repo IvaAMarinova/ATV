@@ -1,0 +1,24 @@
+swagger: '2.0'
+info:
+   title: Wish API
+   version: 1.0.0
+paths:
+   /add_wish:
+      post:
+         summary: Adds a new wish
+         consumes:
+            - application/json
+         parameters:
+            - in: body
+              name: body
+              required: true
+              schema:
+                 type: object
+                 required:
+                    - content
+                 properties:
+                    content:
+                       type: string
+         responses:
+            201:
+               description: Wish added successfully
